@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/12 23:53:15 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/15 15:25:07 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define CUB3D_H
 
 #include "libft/libft.h"
+//#include "minilibx/mlx.h"
 
 # define BUFFER_SIZE 10
 
@@ -25,9 +26,16 @@ typedef struct cub3d
     char    *path_so;
     char    *path_we;
     char    *path_ea;
+    int     map_len;
     int     f_color;
     int     c_color;
     int     fd;
+    int		row;
+	int		len;
+    int     p_n;
+    int     p_s;
+    int     p_e;
+    int     p_w;
     struct s_line   *lines;
 }   t_data;
 
@@ -36,6 +44,16 @@ typedef struct s_line
     char    *line;
     struct s_line *next;
 }   t_line;
+
+typedef struct gamme_elmnt
+{
+	int		row;
+	int		len;
+    int     p_n;
+    int     p_s;
+    int     p_e;
+    int     p_w;
+}			map_elmnt;
 
 typedef struct  s_dirc
 {

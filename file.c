@@ -12,15 +12,23 @@ MLX = -lmlx -framework OpenGL -framework AppKit
 
 $(RM) = rm -f 
   
-all: $(NAME)
+all:
+	@$(MAKE) -C minilibx
+	@$(MAKE) -j $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ) 
-	$(CC) $(CFLAGS) $(LIBFT) $(OBJ) -o $(NAME) 
+$(LIBFT): ./libft/*.c
+	$(MAKE) -C ./libft
+
+$(NAME): $(OBJ) 
+	${CC} $(CFLAGS) -o $(NAME) $(OBJ) -L minilibx -l mlx
+	@install_name_tool -change libmlx.a @loader_path/minilibx/libmlx.a $(NAME)
 
 clean:
+	@$(MAKE) clean -C minilibx
 	$(RM) $(OBJ)
 
 fclean: clean
+	@$(MAKE) clean -C minilibx
 	$(RM) $(NAME)
 
 re: fclean all

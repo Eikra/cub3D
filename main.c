@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/13 01:44:44 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/15 18:44:23 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,21 @@ void	ft_lineadd_back(t_line **lst, t_line *new)
 		*lst = new;
 }
 
+int	ft_linesize(t_line *lst)
+{
+	int		size;
+	t_line	*ptr;
+
+	size = 0;
+	ptr = lst;
+	while (ptr != NULL)
+	{
+		ptr = ptr->next;
+		size++;
+	}
+	return (size);
+}
+
 int read_map(t_data *data)
 {
     char    *str;
@@ -111,7 +126,7 @@ int read_map(t_data *data)
         {
             if (str_content(str))
             {
-                ft_lineadd_back(&data->lines, ft_linenew(ft_strtrim(str,"\n")));
+                ft_lineadd_back(&data->lines, ft_linenew(ft_strrtrim(str,"\n \t\r\v\f")));
                 i++;
             }
             else if(!str_content(str) && i >6)
@@ -125,13 +140,13 @@ int read_map(t_data *data)
     return (0);
 }
 
-int NO_err(t_data *data)
+int NO_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -146,13 +161,13 @@ int NO_err(t_data *data)
     return(0);
 }
 
-int SO_err(t_data *data)
+int SO_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -167,13 +182,13 @@ int SO_err(t_data *data)
     return(0);
 }
 
-int WE_err(t_data *data)
+int WE_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -188,13 +203,13 @@ int WE_err(t_data *data)
     return(0);
 }
 
-int EA_err(t_data *data)
+int EA_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -209,13 +224,13 @@ int EA_err(t_data *data)
     return(0);
 }
 
-int F_err(t_data *data)
+int F_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -230,13 +245,13 @@ int F_err(t_data *data)
     return(0);
 }
 
-int C_err(t_data *data)
+int C_err(t_line  *lines)
 {
     t_line  *tmp;
     int i;
     int j;
 
-    tmp = data->lines;
+    tmp = lines;
     i = 0;
     j = 0;
     while(tmp && i < 6)
@@ -251,45 +266,82 @@ int C_err(t_data *data)
     return(0);
 }
 
-int path_error(t_data *data)
+int get_map_len(t_line  *lines)
 {
-    if (NO_err(data) || SO_err(data) || WE_err(data) || EA_err(data) || F_err(data) || C_err(data))
-        return (1);
-    return(0);
-}
+    t_line  *tmp;
+    int     len;
+    int     n;
+    int     i;
 
-
-int map_size_err(t_line *lines)
-{
-    t_line *tmp;
-    int i;
-
+    len = 0;
     i = 0;
     tmp = lines;
-    while(tmp)
+    while (tmp)
     {
+        if (i > 5)
+        {
+            n = ft_strlen(tmp->line);
+            if (len < n)
+                len = n;
+        }
         tmp = tmp->next;
         i++;
     }
-    if(i <= 8)
-        return(1);
-    return(0);
-    
+    return (len);
 }
+
+int map_elmnt_err(t_data *data)
+{
+    data->map_len = get_map_len(data->lines);
+    printf("%d\n",data->map_len);
+    data->row = ft_linesize(data->lines) - 6;
+    printf("%d\n",data->row);
+    return(0);
+}
+
+int path_error(t_data *data)
+{
+    if (NO_err(data->lines) || SO_err(data->lines) || WE_err(data->lines) || EA_err(data->lines) || F_err(data->lines) || C_err(data->lines))
+        return (1);
+    if (map_elmnt_err(data))
+        return (1);
+    
+    return(0);
+}
+
+
+// int map_size_err(t_line *lines)
+// {
+//     t_line *tmp;
+//     int i;
+
+//     i = 0;
+//     tmp = lines;
+//     while(tmp)
+//     {
+//         tmp = tmp->next;
+//         i++;
+//     }
+//     if(i <= 8)
+//         return(1);
+//     return(0);
+    
+// }
 
 int map_errors(t_data *data)
 {
-    if(map_size_err(data->lines))
+    if(ft_linesize(data->lines) <= 8)
         return(1);
     if(path_error(data))
         return(1);
-    (void)data;
+    
     return(0);
 }
 
 int main(int ac, char **av)
 {
     t_data  data;
+    t_line  *tmp;
 
     if (ac == 2)
     {
@@ -304,10 +356,16 @@ int main(int ac, char **av)
     }
     else
         ft_putstr_fd("error\n",2);
+
     while(data.lines)
     {
+        tmp = data.lines;
         printf("%s\n", data.lines->line);
         data.lines = data.lines->next;
+        free(tmp->line);
+        free(tmp);
     }
+
+    //system("leaks cub3D");
     return (0);
 }
