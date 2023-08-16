@@ -290,12 +290,79 @@ int get_map_len(t_line  *lines)
     return (len);
 }
 
+int    get_map_line(t_data *data)
+{
+    t_line  *tmp;
+    int     i;
+
+    tmp = data->lines;
+    i = 0;
+    data->map = malloc(sizeof(char *) * (data->row + 1));
+    if (!data->map)
+        return (1);
+    while (i++ < 6)
+        tmp = tmp->next;
+    i = 0;
+    while (tmp)
+    {
+        data->map[i] = tmp->line;
+        tmp = tmp->next;
+        i++;
+    }
+    return (0);
+}
+
+char    **get_split_line(char *line)
+{
+    int i;
+    int j;
+    char    *tmp;
+
+    i = 0;
+    j = 0;
+    while(line && line[i])
+    {
+        while(line[i] && line[i] < 32)
+            i++;
+        if (line[i])
+            i++;
+    }
+
+
+}
+
+int    get_textures(t_data *data)
+{
+    char    **tmp;
+    int     i;
+    int     j;
+
+    tmp = data->lines;
+    i = 0;
+    j = 0;
+    while(tmp && i < 6)
+    {
+        tmp = get_split_line(tmp->line);
+        if(!ft_strncmp(tmp[0], "EA", 3))
+        if(!ft_strncmp(tmp[0], "NO", 3))
+        if(!ft_strncmp(tmp[0], "SO", 3))
+        if(!ft_strncmp(tmp[0], "WE", 3))
+        if(!ft_strncmp(tmp[0], "F", 2))
+        if(!ft_strncmp(tmp[0], "C", 2))
+        tmp = tmp->next;
+        i++;
+    }
+    return(0);
+}
+
 int map_elmnt_err(t_data *data)
 {
     data->map_len = get_map_len(data->lines);
-    printf("%d\n",data->map_len);
     data->row = ft_linesize(data->lines) - 6;
-    printf("%d\n",data->row);
+    if (get_map_line(data))
+        return (1);
+    if (get_textures(data))
+        return (1);
     return(0);
 }
 
@@ -365,7 +432,7 @@ int main(int ac, char **av)
         free(tmp->line);
         free(tmp);
     }
-
+    free(data.map);
     //system("leaks cub3D");
     return (0);
 }

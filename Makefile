@@ -4,9 +4,9 @@ SRC = main.c get_next_line.c get_next_line_utils.c libft/ft_putstr_fd.c libft/ft
 
 OBJ = $(SRC:.c=.o)
 
-CC = cc
+CC = clang
 
-CFLAGS=  -Wall -Wextra -Werror #-g3 -fsanitize=address
+CFLAGS=  -Wall -Wextra -Werror -g3 -fsanitize=address
 
 MLX = -lmlx -framework OpenGL -framework AppKit
 
