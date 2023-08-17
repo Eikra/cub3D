@@ -1,6 +1,6 @@
 NAME = cub3D
 
-SRC = main.c get_next_line.c get_next_line_utils.c libft/ft_putstr_fd.c libft/ft_strlen.c libft/ft_strtrim.c libft/ft_putchar_fd.c libft/ft_strchr.c libft/ft_substr.c libft/ft_strncmp.c
+SRC = main.c get_next_line.c get_next_line_utils.c libft/ft_putstr_fd.c libft/ft_strlen.c libft/ft_strtrim.c libft/ft_putchar_fd.c libft/ft_strchr.c libft/ft_substr.c libft/ft_strncmp.c libft/ft_split.c
 
 OBJ = $(SRC:.c=.o)
 

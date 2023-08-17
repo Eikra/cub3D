@@ -28,6 +28,8 @@ typedef struct cub3d
     char    *path_ea;
     int     map_len;
     int     f_color;
+    char    *char_f;
+    char    *char_c;
     int     c_color;
     int     fd;
     int		row;

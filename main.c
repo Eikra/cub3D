@@ -309,6 +309,7 @@ int    get_map_line(t_data *data)
         tmp = tmp->next;
         i++;
     }
+    data->map[i] = NULL;
     return (0);
 }
 
@@ -316,24 +317,63 @@ char    **get_split_line(char *line)
 {
     int i;
     int j;
+    int sp;
     char    *tmp;
+    char    **ret;
 
+    i = 0;
+    j = 0;
+    sp = 0;
+    while(line && line[i])
+    {
+        if (line[i] <=32)
+        {
+            sp++;
+            j++;
+        }
+        while(line[i] && line[i] <= 32)
+            i++;
+        if (line[i])
+        {
+            i++;
+            j++;
+        }
+    }
+    if (sp > 1)
+        return (NULL);
+    tmp = malloc (sizeof(char) * (j + 1));
+    if (!tmp)
+        return (NULL);
     i = 0;
     j = 0;
     while(line && line[i])
     {
-        while(line[i] && line[i] < 32)
+        if (line[i] <=32)
+        {
+            tmp[j] = ' ';
+            j++;
+        }
+        while(line[i] && line[i] <= 32)
             i++;
         if (line[i])
+        {
+            tmp[j] = line[i];
             i++;
+            j++;
+        }
     }
-
-
+    tmp[j] = '\0';
+    ret = ft_split(tmp, ' ');
+    if (!ret)
+        return (NULL);
+    free(tmp);
+    return (ret);
 }
 
 int    get_textures(t_data *data)
 {
-    char    **tmp;
+    char    **str;
+    t_line  *tmp;
     int     i;
     int     j;
 
@@ -342,13 +382,24 @@ int    get_textures(t_data *data)
     j = 0;
     while(tmp && i < 6)
     {
-        tmp = get_split_line(tmp->line);
-        if(!ft_strncmp(tmp[0], "EA", 3))
-        if(!ft_strncmp(tmp[0], "NO", 3))
-        if(!ft_strncmp(tmp[0], "SO", 3))
-        if(!ft_strncmp(tmp[0], "WE", 3))
-        if(!ft_strncmp(tmp[0], "F", 2))
-        if(!ft_strncmp(tmp[0], "C", 2))
+        str = get_split_line(tmp->line);
+        if (!str)
+            return (1);
+        if(!ft_strncmp(str[0], "EA", 3))
+            data->path_ea = str[1];
+        else if(!ft_strncmp(str[0], "NO", 3))
+            data->path_no = str[1];
+        else if(!ft_strncmp(str[0], "SO", 3))
+            data->path_so = str[1];
+        else if(!ft_strncmp(str[0], "WE", 3))
+            data->path_we = str[1];
+        else if(!ft_strncmp(str[0], "F", 2))
+            data->char_f = str[1];
+        else if(!ft_strncmp(str[0], "C", 2))
+            data->char_c = str[1];
+        else return (1);
+        free (str[0]);
+        free(str);
         tmp = tmp->next;
         i++;
     }
@@ -372,28 +423,91 @@ int path_error(t_data *data)
         return (1);
     if (map_elmnt_err(data))
         return (1);
-    
     return(0);
 }
 
+int char_err(char **map)
+{
+    int i;
+    int j;
 
-// int map_size_err(t_line *lines)
-// {
-//     t_line *tmp;
-//     int i;
-
-//     i = 0;
-//     tmp = lines;
-//     while(tmp)
-//     {
-//         tmp = tmp->next;
-//         i++;
-//     }
-//     if(i <= 8)
-//         return(1);
-//     return(0);
+    i = 0;
     
-// }
+    while (map && map[i])
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            if (map[i][j] != ' ' && map[i][j] != '0' && map[i][j] != '1'
+                && map[i][j] != 'N' && map[i][j] != 'S' && map[i][j] != 'E' && map[i][j] != 'W')
+                return(1);
+        j++;
+        }
+        i++;
+    }
+    return (0);
+}
+
+int char_err2(t_data *data)
+{
+    int i;
+    int j;
+
+    i = 0;
+    
+    while (data->map && data->map[i])
+    {
+        j = 0;
+        while (data->map[i][j])
+        {
+            if (data->map[i][j] == 'N')
+                data->p_n++;
+            if (data->map[i][j] == 'S')
+                data->p_s++;
+            if (data->map[i][j] == 'E')
+                data->p_e++;
+            if (data->map[i][j] == 'W')
+                data->p_w++;
+        j++;
+        }
+        i++;
+    }
+    if ((data->p_n + data->p_s + data->p_e + data->p_w) != 1)
+        return (1);
+    return (0);
+}
+
+int border_err(char **map)
+{
+    int i;
+    int j;
+
+    i = 0;
+    
+    while (map && map[i])
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            if (map[i][j] == '0')
+            {
+                if (!i || !map[i + 1] || !j || !map[i][j + 1])
+                    return (1);
+                if ((map[i + 1] && map[i + 1][j] == ' ') || map[i - 1][j] == ' ' || map[i][j + 1] == ' ' || map[i][j - 1] == ' ')
+                    return (1);
+            }
+            // if ((!j && map[i][j] == '0') || (map[i][j] == '0' && !map[i][j + 1]) || (!i && map[i][j] == '0')
+            //     || (map[i][j] == '0' && !map[i + 1]) || (map[i][j] == '0' && (int)ft_strlen(map[i + 1]) <=j))
+            //     return (1);
+            // if ((map[i][j] == '0' && map[i][j + 1] == ' ')
+            //     || (map[i][j] == '0' && map[i + 1][j] == ' ') || (i && map[i][j] == '0' && (int)ft_strlen(map[i - 1]) <=j))
+            //     return (1);
+        j++;
+        }
+        i++;
+    }
+    return (0);
+}
 
 int map_errors(t_data *data)
 {
@@ -401,15 +515,63 @@ int map_errors(t_data *data)
         return(1);
     if(path_error(data))
         return(1);
-    
+    if (char_err(data->map))
+        return (1);
+    if (char_err2(data))
+        return (1);
+    if (border_err(data->map))
+        return (1);
     return(0);
+}
+
+void    free_data(t_data *data)
+{
+    t_line  *tmp;
+
+    while(data->lines)
+    {
+        tmp = data->lines;
+        data->lines = data->lines->next;
+        free(tmp->line);
+        free(tmp);
+    }
+    if (data->map)
+    free(data->map);
+if (data->path_ea)
+    free(data->path_ea);
+if (data->path_no)
+    free(data->path_no);
+if (data->path_so)
+    free(data->path_so);
+if (data->path_we)
+    free(data->path_we);
+if (data->char_c)
+    free(data->char_c);
+if (data->char_f)
+    free(data->char_f);
+}
+
+void    init_data(t_data *data)
+{
+    data->buffer = NULL;
+    data->map = NULL;
+    data->path_ea = NULL;
+    data->path_no = NULL;
+    data->path_so = NULL;
+    data->path_we = NULL;
+    data->char_f = NULL;
+    data->char_c = NULL;
+    data->p_n = 0;
+    data->p_s = 0;
+    data->p_e = 0;
+    data->p_w = 0;
 }
 
 int main(int ac, char **av)
 {
     t_data  data;
-    t_line  *tmp;
 
+    init_data(&data);
     if (ac == 2)
     {
         if(check_map_name(av))
@@ -419,20 +581,29 @@ int main(int ac, char **av)
         if (read_map(&data))
             return(ft_putstr_fd("error\n",2), 0);
         if (map_errors(&data))
-            return(ft_putstr_fd("error\n",2), 0);
+          ft_putstr_fd("error\n",2);
     }
     else
         ft_putstr_fd("error\n",2);
-
-    while(data.lines)
-    {
-        tmp = data.lines;
-        printf("%s\n", data.lines->line);
-        data.lines = data.lines->next;
-        free(tmp->line);
-        free(tmp);
-    }
-    free(data.map);
+    // if (data.path_no)
+    // printf("%s\n", data.path_no);
+    // if (data.path_so)
+    // printf("%s\n", data.path_so);
+    // if (data.path_we)
+    // printf("%s\n", data.path_we);
+    // if (data.path_ea)
+    // printf("%s\n", data.path_ea);
+    // if (data.char_f)
+    // printf("%s\n", data.char_f);
+    // if (data.char_c)
+    // printf("%s\n", data.char_c);
+    // int i = 0;
+    // while (data.map && data.map[i])
+    // {
+    //     printf("%s\n", data.map[i]);
+    //     i++;
+    // }
+    free_data(&data);
     //system("leaks cub3D");
     return (0);
 }
