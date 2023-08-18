@@ -6,7 +6,7 @@
 /*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/15 18:44:23 by m                ###   ########.fr       */
+/*   Updated: 2023/08/18 14:02:02 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,11 +375,9 @@ int    get_textures(t_data *data)
     char    **str;
     t_line  *tmp;
     int     i;
-    int     j;
 
     tmp = data->lines;
     i = 0;
-    j = 0;
     while(tmp && i < 6)
     {
         str = get_split_line(tmp->line);
@@ -493,7 +491,7 @@ int border_err(char **map)
             {
                 if (!i || !map[i + 1] || !j || !map[i][j + 1])
                     return (1);
-                if ((map[i + 1] && map[i + 1][j] == ' ') || map[i - 1][j] == ' ' || map[i][j + 1] == ' ' || map[i][j - 1] == ' ')
+                if ((map[i + 1] && (int)ft_strlen(map[i + 1]) <= j) || (map[i + 1] && map[i + 1][j] == ' ') || ((int)ft_strlen(map[i - 1]) <= j) || map[i - 1][j] == ' ' || map[i][j + 1] == ' ' || map[i][j - 1] == ' ')
                     return (1);
             }
             // if ((!j && map[i][j] == '0') || (map[i][j] == '0' && !map[i][j + 1]) || (!i && map[i][j] == '0')
