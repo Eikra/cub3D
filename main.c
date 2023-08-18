@@ -6,11 +6,19 @@
 /*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/18 14:02:02 by m                ###   ########.fr       */
+/*   Updated: 2023/08/18 18:15:28 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int ft_err(char *err)
+{
+    ft_putstr_fd("\033[0;31mError:\033[0m \033[0;33m",2);
+    ft_putstr_fd(err,2);
+    ft_putstr_fd("\033[0m\n",2);
+    return (1);
+}
 
 int	ft_strrncmp(char *s, char *r, int n)
 {
@@ -583,6 +591,7 @@ int main(int ac, char **av)
     }
     else
         ft_putstr_fd("error\n",2);
+    ft_err("lol");
     // if (data.path_no)
     // printf("%s\n", data.path_no);
     // if (data.path_so)
