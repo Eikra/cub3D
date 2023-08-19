@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parcing1.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/18 19:30:52 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/18 19:36:58 by iecharak         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   parcing1.c										 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: iecharak <iecharak@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2023/08/18 19:30:52 by iecharak		  #+#	#+#			 */
+/*   Updated: 2023/08/19 12:48:01 by iecharak		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../cub3d.h"
@@ -58,23 +58,23 @@ int	ft_linesize(t_line *lst)
 	return (size);
 }
 
-int C_err(t_line  *lines)
+int	c_err(t_line *lines)
 {
-    t_line  *tmp;
-    int i;
-    int j;
+	t_line	*tmp;
+	int		i;
+	int		j;
 
-    tmp = lines;
-    i = 0;
-    j = 0;
-    while(tmp && i < 6)
-    {
-        if(!ft_strncmp(tmp->line, "C ", 2))
-            j++;
-        tmp = tmp->next;
-        i++;
-    }
-    if (j != 1)
-        return(1);
-    return(0);
+	tmp = lines;
+	i = 0;
+	j = 0;
+	while (tmp && i < 6)
+	{
+		if (!ft_strncmp(tmp->line, "C ", 2))
+			j++;
+		tmp = tmp->next;
+		i++;
+	}
+	if (j != 1)
+		return (1);
+	return (0);
 }
