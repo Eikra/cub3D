@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/19 15:33:29 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/22 13:54:47 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,20 @@
 # define CUB3D_H
 
 # include "libft/libft.h"
+# include <mlx.h>
+#include <math.h>
 
 # define BUFFER_SIZE 10
+# define ESC 65307
+# define A 97
+# define W 119
+# define S 115
+# define D 100
+ # define BACK 65364
+# define ON 65362
+# define LEFT 65361
+# define RIGHT 65363
+#define MOVE 3
 
 # define SET "\n \t\r\v\f"
 
@@ -40,6 +52,17 @@ typedef struct cub3d
 	int				p_e;
 	int				p_w;
 	struct s_line	*lines;
+	void			*id;
+	void			*w_id;
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+	int				p_x;
+	int				p_y;
+	double			angl;
+	double			ref;
 }					t_data;
 
 typedef struct s_line
