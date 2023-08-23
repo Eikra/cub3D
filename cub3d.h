@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/22 13:54:47 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/23 15:20:54 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 # define LEFT 65361
 # define RIGHT 65363
 #define MOVE 3
+#define WHITE 16777215
+#define YALLOW 16776960
+
+#define	REC	36
 
 # define SET "\n \t\r\v\f"
 
@@ -59,10 +63,11 @@ typedef struct cub3d
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
-	int				p_x;
-	int				p_y;
+	double			p_x;
+	double			p_y;
 	double			angl;
 	double			ref;
+	int				pos;
 }					t_data;
 
 typedef struct s_line

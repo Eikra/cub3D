@@ -115,6 +115,18 @@ int	border_err(char **map)
 	return (0);
 }
 
+void	set_pos(t_data *data)
+{
+	if (data->p_n)
+		data->pos = 1;
+	if (data->p_e)
+		data->pos = 2;
+	if (data->p_s)
+		data->pos = 3;
+	if (data->p_w)
+		data->pos = 4;
+}
+
 int	map_errors(t_data *data)
 {
 	if (ft_linesize(data->lines) <= 8)
@@ -129,5 +141,6 @@ int	map_errors(t_data *data)
 		return (1);
 	if (border_err(data->map))
 		return (1);
+	set_pos(data);
 	return (0);
 }

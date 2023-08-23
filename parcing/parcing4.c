@@ -19,7 +19,7 @@ int	str_content(char *str)
 	i = 0;
 	while (str && str[i])
 	{
-		if (str[i] > 32)
+		if (str[i] > REC)
 			return (1);
 		i++;
 	}

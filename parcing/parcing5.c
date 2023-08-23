@@ -46,12 +46,12 @@ int	ft_line_len(char *line)
 	sp = 0;
 	while (line && line[i])
 	{
-		if (line[i] <= 32)
+		if (line[i] <= REC)
 		{
 			sp++;
 			j++;
 		}
-		while (line[i] && line[i] <= 32)
+		while (line[i] && line[i] <= REC)
 			i++;
 		if (line[i])
 		{
@@ -75,12 +75,12 @@ void	get_line2(char *line, char **s)
 	tmp = *s;
 	while (line && line[i])
 	{
-		if (line[i] <= 32)
+		if (line[i] <= REC)
 		{
 			tmp[j] = ' ';
 			j++;
 		}
-		while (line[i] && line[i] <= 32)
+		while (line[i] && line[i] <= REC)
 			i++;
 		if (line[i])
 		{

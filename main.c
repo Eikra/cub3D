@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/22 15:27:12 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/23 17:56:03 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,21 +94,21 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-void draw_rectangle(t_data *data, int x, int y, int color)
+void draw_rectangle(t_data *data, double x, double y, int color)
 {
-	int i;
-	int j;
+	double i;
+	double j;
 
 	i = 0;
-	while (i < 32)
+	while (i < REC)
 	{
 		j = 0;
-		while (j < 32)
+		while (j < REC)
 		{
 			// if (!j || !i)
-			// my_mlx_pixel_put(data, (x * 32) + j, (y * 32) + i,255);
+			// my_mlx_pixel_put(data, (x * REC) + j, (y * REC) + i,255);
 			// else 
-			my_mlx_pixel_put(data, (x * 32) + j, (y * 32) + i,color);
+			my_mlx_pixel_put(data, (x * REC) + j, (y * REC) + i,color);
 			j++;
 		}
 		i++;
@@ -140,22 +140,78 @@ void draw_rectangle(t_data *data, int x, int y, int color)
 // 	}
 // }
 
-void	draw_player(t_data *data, int x, int y, int color)
+void	draw_ray(t_data *data, double angl, int color, int ray_len)
 {
 	int i;
-	int j;
+
 	i = 0;
-	j = 0;
-	my_mlx_pixel_put(data, x + j, y  + i, 0);
-	while (i < 16)
+	while (i < ray_len)
 	{
-		my_mlx_pixel_put(data, x + j * cos(data->angl), y   + i * sin(data->angl), color);
-		j++;
+		my_mlx_pixel_put(data, data->p_x + i * cos(angl), data->p_y + i * sin(angl), color);
 		i++;
 	}
 }
 
-void	ft_get_position(int *p_x, int *p_y, char **map)
+int	closed_erea(char **map, int i, int j)
+{
+	if(map[i - 1][j] == '1' && map[i + 1][j] == '1' && map[i][j + 1] == '1' && map[i][j - 1] == '1')
+		return (1);
+	return (0);
+}
+
+long	get_ray_len(t_data *data, double field)
+{
+	long	ray_len;
+	int		i;
+	int		j;
+	
+	ray_len = 0;
+	while (1)
+	{
+		i = ((data->p_y + ray_len * sin(field))/ (double)REC);
+		j = ((data->p_x + ray_len * cos(field)) / (double)REC);
+		if (data->map[i][j] == '1'|| (data->map[i][j] == '0' && closed_erea(data->map, i, j)))
+			return (ray_len);
+		ray_len++;
+	}
+	return (0);
+	
+}
+
+void	draw_view(t_data *data, int color)
+{
+	double	field;
+	long	ray_len;
+	double	deg_by_pex;
+
+	field = data->angl - ((M_PI / 180) * 30);
+	deg_by_pex = ((M_PI / 180) * 60) / (32 * ft_strlen(data->map[0]));
+	while (field < data->angl + (M_PI / 180) * 30)
+	{
+		//ray_len = 20;
+		ray_len = get_ray_len(data, field);
+		draw_ray(data, field, color, ray_len);
+		field += deg_by_pex;
+	}
+}
+
+void	draw_player(t_data *data, double x, double y, int color)
+{
+	int i;
+
+	i = 0;
+	my_mlx_pixel_put(data, x, y, color);
+	// while (i < 16)
+	// {
+	// 	my_mlx_pixel_put(data, x + i * cos(data->angl), y   + i * sin(data->angl), color);
+	// 	i++;
+	// }
+	//16776960
+	draw_view(data, color);
+	my_mlx_pixel_put(data, x, y, 0);
+}
+
+void	ft_get_position(double *p_x, double *p_y, char **map)
 {
 		int x;
 	int y;
@@ -167,8 +223,8 @@ void	ft_get_position(int *p_x, int *p_y, char **map)
 		{
 			if (map[y][x] == 'N' || map[y][x] == 'S' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				(*p_y) = ((y) * 32) + 16;
-				(*p_x) = ((x) * 32) - 16;
+				(*p_y) = ((y) * REC) + 16;
+				(*p_x) = ((x) * REC) + 16;
 				return ;
 			}
 			x++;
@@ -183,7 +239,7 @@ void	ft_display(t_data *data)
 	int y;
 
 	y = 0;
-	while (data->map[y])
+	while (data->map[(y)])
 	{
 		x = 0;
 		while (data->map[y][x])
@@ -191,7 +247,7 @@ void	ft_display(t_data *data)
 			if (data->map[y][x] == '1')
 				draw_rectangle(data,x, y,  12632256);
 			else
-				draw_rectangle(data,x, y,  16777215);
+				draw_rectangle(data,x, y,  WHITE);
 			x++;
 		}
 		y++;
@@ -209,34 +265,12 @@ int	ft_strraw(char **map)
 	return (i);
 }
 
-// int	is_wall_down(t_data *data)
-// {
-// 	int i;
-// 	int	j;
-// 	i = data->p_y / 32 + 1;
-// 	j = data->p_x / 32;
-// 	if (data->map[i][j] == '1' && (data->p_y + 6) > (i * 32))
-// 		return (1);
-// 	return (0);
-// }
-
-// int	is_wall_up(t_data *data)
-// {
-// 	int i;
-// 	int	j;
-// 	i = (data->p_y / 32);
-// 	j = data->p_x / 32;
-// 	if (data->map[i -1][j] == '1' && (data->p_y - 17) <= (i * 32))
-// 		return (1);
-// 	return (0);
-// }
-
 int	is_wall_front(t_data *data)
 {
 	int i;
 	int	j;
-	i = (data->p_y + 17 * sin(data->angl))/ 32;
-	j = (data->p_x + 17 * cos(data->angl)) / 32;
+	i = ((data->p_y + 17 * sin(data->angl))/ (double)REC);
+	j = ((data->p_x + 17 * cos(data->angl)) / (double)REC);
 	if (data->map[i][j] == '1')
 		return (1);
 	return (0);
@@ -246,8 +280,52 @@ int	is_wall_back(t_data *data)
 {
 	int i;
 	int	j;
-	i = (data->p_y + sin(data->angl))/ 32;
-	j = (data->p_x + cos(data->angl)) / 32;
+	i = ((data->p_y - (6 * sin(data->angl)))/ (double)REC);
+	j = ((data->p_x - (6 * cos(data->angl))) / (double)REC);
+	if (data->map[i][j] == '1')
+		return (1);
+	return (0);
+}
+
+void	update_angle(t_data *data, int dir)
+{
+	if (dir == RIGHT)
+	{
+		data->angl += (M_PI / 180);
+		if (data->angl == (M_PI * 2))
+			data->angl = 0;
+	}
+	if (dir == LEFT)
+	{
+		data->angl -= (M_PI / 180);
+		if (data->angl < 0)
+			data->angl += data->angl;
+	}
+}
+
+int	is_wall_right(t_data *data)
+{
+	double	new_angle;
+	int i;
+	int	j;
+
+	new_angle = data->angl + (M_PI / 180) * 30;
+	i = ((data->p_y + 17 * sin(new_angle))/ (double)REC);
+	j = ((data->p_x + 17 * cos(new_angle)) / (double)REC);
+	if (data->map[i][j] == '1')
+		return (1);
+	return (0);
+}
+
+int	is_wall_left(t_data *data)
+{
+	double	new_angle;
+	int i;
+	int	j;
+
+	new_angle = data->angl - (M_PI / 180) * 30;
+	i = ((data->p_y + 17 * sin(new_angle))/ (double)REC);
+	j = ((data->p_x + 17 * cos(new_angle)) / (double)REC);
 	if (data->map[i][j] == '1')
 		return (1);
 	return (0);
@@ -263,41 +341,61 @@ int	deal_key(int key, t_data *data)
 	}
 	if ((key == ON || key == W) && !is_wall_front(data))
 	{
-		data->p_x += 6 * cos(data->angl);
-		data->p_y += 6 * sin(data->angl);
+		data->p_x += (6 * cos(data->angl));
+		data->p_y += (6 * sin(data->angl));
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
 	if ((key == BACK || key == S) && !is_wall_back(data))
 	{
-		data->p_x -= 6 * cos(data->angl);
-		data->p_y -= 6 * sin(data->angl);
+		data->p_x -= (6 * cos(data->angl));
+		data->p_y -= (6 * sin(data->angl));
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
-	if (key == RIGHT || key == D)
+	if (key == RIGHT && !is_wall_right(data)) //
 	{
-		data->angl += (M_PI / 180);
+		update_angle(data, RIGHT);
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
-	if (key == LEFT || key == A)
+	if (key == LEFT && !is_wall_left(data))//&& 
 	{
-		data->angl -= (M_PI / 180);
+		update_angle(data, LEFT);
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
 	return (0);
 }
 
+void	init_angle(t_data *data)
+{
+	if (data->pos == 1)
+	{
+		data->angl = M_PI / 2;
+		data->angl *= 3;	
+	}
+	if (data->pos == 2)
+	{
+		data->angl = 0;
+	}
+	if (data->pos == 3)
+	{
+		data->angl = M_PI / 2;
+	}
+	if (data->pos == 4)
+	{
+		data->angl = M_PI;
+	}
+}
+
 void	ft_mlx(t_data *data)
 {
 	ft_get_position(&data->p_x, &data->p_y, data->map);
-	data->angl = M_PI / 2;
-	data->angl *= 3;
+	init_angle(data);
 	data->id = mlx_init();
-	data->w_id = mlx_new_window(data->id, 32 * (int)ft_strlen(data->map[0]), 32 * ft_strraw(data->map), "cub3D");
-	data->img = mlx_new_image(data->id, 32 * (int)ft_strlen(data->map[0]), 32 * ft_strraw(data->map));
+	data->w_id = mlx_new_window(data->id, REC * (int)ft_strlen(data->map[0]), REC * ft_strraw(data->map), "cub3D");
+	data->img = mlx_new_image(data->id, REC * (int)ft_strlen(data->map[0]), REC * ft_strraw(data->map));
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
 								&data->endian);
 	ft_display(data);
@@ -349,4 +447,26 @@ int	main(int ac, char **av)
 // 		}
 // 		y++;
 // 	}
+// }
+
+// int	is_wall_down(t_data *data)
+// {
+// 	int i;
+// 	int	j;
+// 	i = data->p_y / REC + 1;
+// 	j = data->p_x / REC;
+// 	if (data->map[i][j] == '1' && (data->p_y + 6) > (i * REC))
+// 		return (1);
+// 	return (0);
+// }
+
+// int	is_wall_up(t_data *data)
+// {
+// 	int i;
+// 	int	j;
+// 	i = (data->p_y / REC);
+// 	j = data->p_x / REC;
+// 	if (data->map[i -1][j] == '1' && (data->p_y - 17) <= (i * REC))
+// 		return (1);
+// 	return (0);
 // }
