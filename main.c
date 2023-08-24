@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/23 17:56:03 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/24 11:23:16 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	free_data(t_data *data)
 		free(data->char_c);
 	if (data->char_f)
 		free(data->char_f);
+	exit(0);
 }
 
 void	init_data(t_data *data)
@@ -152,16 +153,18 @@ void	draw_ray(t_data *data, double angl, int color, int ray_len)
 	}
 }
 
-int	closed_erea(char **map, int i, int j)
+int	closed_erea(t_data *data, int i, int j)
 {
-	if(map[i - 1][j] == '1' && map[i + 1][j] == '1' && map[i][j + 1] == '1' && map[i][j - 1] == '1')
+	//printf("P_Y=%f, i=%d, P_X=%f, j=%d\n",data->p_y / REC, i,data->p_x / REC, j);
+	if(data->map[i - 1][j] == '1' && data->map[i + 1][j] == '1' && data->map[i][j + 1] == '1' && data->map[i][j - 1] == '1')
 		return (1);
 	return (0);
 }
 
+			//printf("P_Y=%f, i=%d, P_X=%f, j=%d\n",data->p_y / REC, i,data->p_x / REC, j);
 long	get_ray_len(t_data *data, double field)
 {
-	long	ray_len;
+	double	ray_len;
 	int		i;
 	int		j;
 	
@@ -170,8 +173,17 @@ long	get_ray_len(t_data *data, double field)
 	{
 		i = ((data->p_y + ray_len * sin(field))/ (double)REC);
 		j = ((data->p_x + ray_len * cos(field)) / (double)REC);
-		if (data->map[i][j] == '1'|| (data->map[i][j] == '0' && closed_erea(data->map, i, j)))
-			return (ray_len);
+		//printf("P_Y=%f, i=%d, P_X=%f, j=%d\n",data->p_y / REC, i,data->p_x / REC, j);
+		if (data->map[i][j] == '1')
+			return ((long)ray_len);
+		if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) < j && data->map[i][j - 1] == '1' && data->map[i + 1][j] == '1')
+			return ((long)ray_len);
+		if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) > j && data->map[i + 1][j] == '1' && data->map[i][j + 1] == '1')
+			return ((long)ray_len);
+		if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) < j && data->map[i - 1][j] == '1' && data->map[i][j - 1] == '1')
+			return ((long)ray_len);
+		if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) > j && data->map[i - 1][j] == '1' && data->map[i][j + 1] == '1')
+			return ((long)ray_len);
 		ray_len++;
 	}
 	return (0);
@@ -201,12 +213,6 @@ void	draw_player(t_data *data, double x, double y, int color)
 
 	i = 0;
 	my_mlx_pixel_put(data, x, y, color);
-	// while (i < 16)
-	// {
-	// 	my_mlx_pixel_put(data, x + i * cos(data->angl), y   + i * sin(data->angl), color);
-	// 	i++;
-	// }
-	//16776960
 	draw_view(data, color);
 	my_mlx_pixel_put(data, x, y, 0);
 }
@@ -273,6 +279,14 @@ int	is_wall_front(t_data *data)
 	j = ((data->p_x + 17 * cos(data->angl)) / (double)REC);
 	if (data->map[i][j] == '1')
 		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) < j && data->map[i][j - 1] == '1' && data->map[i + 1][j] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) > j && data->map[i + 1][j] == '1' && data->map[i][j + 1] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) < j && data->map[i - 1][j] == '1' && data->map[i][j - 1] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) > j && data->map[i - 1][j] == '1' && data->map[i][j + 1] == '1')
+		return (1);
 	return (0);
 }
 
@@ -280,9 +294,18 @@ int	is_wall_back(t_data *data)
 {
 	int i;
 	int	j;
+
 	i = ((data->p_y - (6 * sin(data->angl)))/ (double)REC);
 	j = ((data->p_x - (6 * cos(data->angl))) / (double)REC);
 	if (data->map[i][j] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) < j && data->map[i][j - 1] == '1' && data->map[i + 1][j] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) > i && (int)(data->p_x / (double)REC) > j && data->map[i + 1][j] == '1' && data->map[i][j + 1] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) < j && data->map[i - 1][j] == '1' && data->map[i][j - 1] == '1')
+		return (1);
+	if (data->map[i][j] == '0' && (int)(data->p_y / (double)REC) < i && (int)(data->p_x / (double)REC) > j && data->map[i - 1][j] == '1' && data->map[i][j + 1] == '1')
 		return (1);
 	return (0);
 }
@@ -353,13 +376,13 @@ int	deal_key(int key, t_data *data)
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
-	if (key == RIGHT && !is_wall_right(data)) //
+	if (key == RIGHT) // && !is_wall_right(data)
 	{
 		update_angle(data, RIGHT);
 		ft_display(data);
 		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
-	if (key == LEFT && !is_wall_left(data))//&& 
+	if (key == LEFT )//&& && !is_wall_left(data)
 	{
 		update_angle(data, LEFT);
 		ft_display(data);
@@ -413,7 +436,7 @@ int	main(int ac, char **av)
 	if (ac == 2)
 	{
 		if (check_map_name(av))
-			return (0);
+			return (exit(0), 0);
 		if (open_file_error(&data, av[1]))
 			return (free_data(&data), 0);
 		if (read_map(&data))
@@ -421,8 +444,6 @@ int	main(int ac, char **av)
 		if (map_errors(&data))
 			return (free_data(&data), 0);
 		ft_mlx(&data);
-		//print_data(data);
-		//free_data(&data);
 	}
 	else
 		ft_err("Invalid number of arguments!");
