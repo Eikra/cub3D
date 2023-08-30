@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/23 15:20:54 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/30 21:48:50 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,17 @@
 #include <math.h>
 
 # define BUFFER_SIZE 10
+
+// #define UP_LEFT	1
+// #define DOWN_LEFT 2
+// #define DOWN_RIGHT 3
+// #define UP_RIGHT 4
+
+#define	VER_LEFT 1
+#define VER_HOR 2
+#define HOR_UP	3
+
+
 # define ESC 65307
 # define A 97
 # define W 119
@@ -27,14 +38,37 @@
 # define ON 65362
 # define LEFT 65361
 # define RIGHT 65363
+
+
+
 #define MOVE 3
 #define WHITE 16777215
 #define YALLOW 16776960
+#define	RED 255 << 8
 
-#define	REC	36
+
+
+#define W_W 1280.0
+#define W_H 720.0
+//#define W_H (15.0 * REC)
+
+
+
+#define H_F_V ((M_PI * 30.0) / 180.0)
+#define F_V   ((M_PI * 60.0) / 180.0)
+
+
+
+
+#define N_C 126378464
+#define E_C 65535
+#define S_C 16770029
+#define W_C 16739040
+
+#define	REC	64.0
 
 # define SET "\n \t\r\v\f"
-
+//ray_len_ver = REC - (int)data->p_x % (int)REC - 1;
 typedef struct cub3d
 {
 	char			**buffer;
@@ -65,9 +99,18 @@ typedef struct cub3d
 	int				endian;
 	double			p_x;
 	double			p_y;
+	double			r_x;
+	double			r_y;
 	double			angl;
 	double			ref;
 	int				pos;
+	int				dierc;
+	int				up_dowm[2];
+	int				left_right[2];
+	int				rotate[2];
+	int				arawdir[2];
+	int				dir_keys[3];
+	
 }					t_data;
 
 typedef struct s_line
@@ -132,5 +175,11 @@ int		color_err(t_data *data);
 int		check_textures(t_data *data, char ***s);
 int		get_textures(t_data *data);
 char	**get_split_line(char *line);
+int		ft_strraw(char **map);
+int	KeyRelease(int key, t_data *data);
+int	Keypress(int key, t_data *data);
+int deal_keys(t_data *data);
+int	player_movement(t_data *data);
+int	ft_exit(void);
 
 #endif

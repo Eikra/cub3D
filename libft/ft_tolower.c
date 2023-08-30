@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 12:31:58 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/23 10:42:52 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/25 12:14:27 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 int	ft_tolower(int c)
 {
 	if (c <= 'Z' && c >= 'A')
-		return (c + REC);
+		return (c + 64);
 	return (c);
 }

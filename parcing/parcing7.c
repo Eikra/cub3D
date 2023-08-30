@@ -114,7 +114,7 @@ int	invalid_rang_color(char *strc, int *color)
 }
 
 int	color_err(t_data *data)
-{	
+{
 	if (invalid_char_color(data->char_c))
 		return (1);
 	if (invalid_char_color(data->char_f))

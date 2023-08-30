@@ -51,7 +51,7 @@ int	char_err(char **map)
 				&& map[i][j] != 'N' && map[i][j] != 'S' && map[i][j] != 'E'
 				&& map[i][j] != 'W')
 				return (ft_err("Invalid character in map !!"));
-		j++;
+			j++;
 		}
 		i++;
 	}
@@ -77,7 +77,7 @@ int	char_err2(t_data *data)
 				data->p_e++;
 			if (data->map[i][j] == 'W')
 				data->p_w++;
-		j++;
+			j++;
 		}
 		i++;
 	}
@@ -108,7 +108,7 @@ int	border_err(char **map)
 					|| map[i][j + 1] == ' ' || map[i][j - 1] == ' ')
 					return (ft_err("cub3D need a closed map borders!!"));
 			}
-		j++;
+			j++;
 		}
 		i++;
 	}

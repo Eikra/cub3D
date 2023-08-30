@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 16:55:06 by iecharak          #+#    #+#             */
-/*   Updated: 2022/10/25 02:30:19 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/25 11:51:56 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	ft_atoi(const char *str)
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 		rslt = rslt * 10 + str[i++] - 48;
-	if (sign == -1 && rslt > 9223372036854775807)
+	if (sign == -1 && rslt > 92233W_H36854775807)
 		return (0);
-	if (sign == 1 && rslt > 9223372036854775807)
+	if (sign == 1 && rslt > 92233W_H36854775807)
 		return (-1);
 	return (rslt *= sign);
 }
