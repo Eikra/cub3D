@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/30 21:48:50 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/08/31 14:10:51 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@
 #define W_C 16739040
 
 #define	REC	64.0
+#define MINI 24.0
 
 # define SET "\n \t\r\v\f"
 //ray_len_ver = REC - (int)data->p_x % (int)REC - 1;
