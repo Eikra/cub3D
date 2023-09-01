@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/01 12:31:46 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/09/01 22:12:02 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CUB3D_H
 
 # include "libft/libft.h"
-# include <mlx.h>
+# include "mlx.h"
 #include <math.h>
 
 # define BUFFER_SIZE 10
@@ -29,15 +29,15 @@
 #define HOR_UP	3
 
 
-# define ESC 65307
-# define A 97
-# define W 119
-# define S 115
-# define D 100
- # define BACK 65364
-# define ON 65362
-# define LEFT 65361
-# define RIGHT 65363
+# define ESC 53
+# define A 0
+# define W 13
+# define S 1
+# define D 2
+ # define BACK 125
+# define ON 126
+# define LEFT 123
+# define RIGHT 124
 
 
 
@@ -66,7 +66,7 @@
 #define W_C 16739040
 
 #define	REC	64.0
-#define MINI 24.0
+#define MINI 10.0
 
 # define SET "\n \t\r\v\f"
 //ray_len_ver = REC - (int)data->p_x % (int)REC - 1;

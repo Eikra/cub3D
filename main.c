@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/01 13:22:24 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/09/01 22:28:17 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	draw_ray(t_data *data, double angl, int color, double ray_len)
 {
 	double i;
 
-	i = 0;
+	i = ray_len - 1.0;
 	while (i < ray_len)
 	{
 		my_mlx_pixel_put(data, data->p_x + i * cos(angl), data->p_y + i * sin(angl), color);
@@ -123,31 +123,29 @@ double	distance_up_right(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC + REC * k;
 	y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
-	while (x_v < W_W && x_v >= 0 && y_v < W_H && y_v >= 0 && data->map[(int)y_v /64][(int)(x_v / 64)] != '1')
+	while (x_v < W_W && x_v >= 0 && y_v < W_H && y_v >= 0 && data->map[(int)(y_v / REC)][(int)((x_v + 1) / REC)] != '1')
 	{
 		x_v = floor(data->p_x / REC)* REC + REC * k;
 		y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
 		k++;
 	}
 	ray_len_ver = sqrt(pow((x_v - data->p_x),2) + pow((y_v - data->p_y), 2));
-	data->r[0] = x_v;
-	data->r[1] = y_v;
-	k = 1;
-	y_h = floor(data->p_y / REC) * REC;
+	data->r[0] = y_v;
+	k = 0;
+	y_h = floor(data->p_y / REC) * REC - REC * k;
 	x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
-	while (x_h < W_W && x_h >= 0 && y_h < W_H && y_h >= 0 && y_h - 64.0 >= 0.0 && data->map[(int)(y_h - 1) /64 ][(int)(x_h / 64)] != '1')
+	while (x_h < W_W && x_h >= 0 && y_h < W_H && y_h >= 0 && y_h - REC >= 0.0 && data->map[(int)((y_h - 1) /REC) ][(int)(x_h / REC)] != '1')
 	{
 		y_h = floor(data->p_y / REC) * REC - REC * k;
 		x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
 		k++;
 	}
 	ray_len_hor = sqrt(pow((x_h - data->p_x),2) + pow((y_h - data->p_y), 2));
-	data->r[0] = x_h;
-	data->r[1] = y_h;
 	data->dierc = 2;
 	if(ray_len_ver < ray_len_hor)
 		return(ray_len_ver);
 	data->dierc = 1;
+	data->r[0] = x_h;
 	return(ray_len_hor);
 }
 
@@ -164,20 +162,19 @@ double	distance_down_right(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC + REC * k;
 	y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
-	while (y_v + REC < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v + REC < ft_strlen (data->map[(int)((y_v + 1) / 64)]) * REC && x_v >= 0 && (data->map[(int)y_v /64][(int)((x_v + 1) / 64)] != '1') )//&& data->map[(int)(y_v + 1) /64][(int)((x_v - 1) / 64)] != '1'
+	while (y_v + REC < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v + REC < ft_strlen (data->map[(int)((y_v + 1) / REC)]) * REC && x_v >= 0 && (data->map[(int)(y_v /REC)][(int)((x_v + 1) / REC)] != '1') )//&& data->map[(int)(y_v + 1) /REC][(int)((x_v - 1) / REC)] != '1'
 	{
 		x_v = floor(data->p_x / REC)* REC + REC * k;
 		y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
 		k++;
 	}
 	ray_len_ver = sqrt(pow((x_v - data->p_x),2) + pow((y_v - data->p_y), 2));
-	data->r[0] = x_v;
-	data->r[1] = y_v;
+	data->r[0] = y_v;
 	data->dierc = 2;
 	k = 1;
 	y_h = floor(data->p_y / REC) * REC + REC * k;
 	x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
-	while (y_h + REC < (ft_strraw(data->map) * REC) && y_h >= 0 && x_h + REC < ft_strlen (data->map[(int)(y_h + 1) /64]) * REC && x_h >= 0 && data->map[(int)(y_h + 1) /64][(int)((x_h) / 64)] != '1')
+	while (y_h + REC < (ft_strraw(data->map) * REC) && y_h >= 0 && x_h + REC < ft_strlen (data->map[(int)((y_h + 1) /REC)]) * REC && x_h >= 0 && data->map[(int)(((y_h + 1) /REC))][(int)((x_h) / REC)] != '1')
 	{
 		y_h = floor(data->p_y / REC) * REC + REC * k;
 		x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
@@ -189,7 +186,6 @@ double	distance_down_right(t_data *data, double field)
 		return(ray_len_ver);
 	data->dierc = 3;
 	data->r[0] = x_h;
-	data->r[1] = y_h;
 	return(ray_len_hor);
 }
 
@@ -207,7 +203,7 @@ double	distance_down_left(t_data *data, double field)
 	
 	x_v = floor(data->p_x / REC)* REC - REC * k;
 	y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
-	while (y_v + REC < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v - 1 < ft_strlen (data->map[(int)y_v / 64]) * REC && (data->map[(int)y_v /64][(int)((x_v - 1) / 64)] != '1'))
+	while (y_v + REC < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v - 1 < ft_strlen (data->map[(int)(y_v / REC)]) * REC && (data->map[(int)(y_v /REC)][(int)((x_v - 1) / REC)] != '1'))
 	{
 		x_v = floor(data->p_x / REC)* REC - REC * k;
 		y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
@@ -215,23 +211,22 @@ double	distance_down_left(t_data *data, double field)
 	}
 	ray_len_ver = sqrt(pow((x_v - data->p_x),2) + pow((y_v - data->p_y), 2));
 	data->dierc = 4;
-	data->r[0] = x_v;
-	data->r[1] = y_v;
-	k = 1;
+	data->r[0] = y_v;
+	k = 0;
 	y_h = floor(data->p_y / REC) * REC + REC * k;
 	x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
-	while (y_h + 1 + REC < (ft_strraw(data->map) * REC) && y_h >= 0 && x_h >= 0 && x_h + REC < ft_strlen (data->map[(int)(y_h + 1) / 64]) * REC  && data->map[(int)(y_h + 1) /64][(int)((x_h) / 64)] != '1')
+	while (y_h + 1 + REC < (ft_strraw(data->map) * REC) && y_h >= 0 && x_h >= 0 && x_h + REC < ft_strlen (data->map[(int)((y_h + 1) / REC)]) * REC  && data->map[(int)((y_h + 1) /REC)][(int)((x_h) / REC)] != '1')
 	{
 		y_h = floor(data->p_y / REC) * REC + REC * k;
 		x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
 		k++;
 	}
 	ray_len_hor = sqrt(pow((x_h - data->p_x),2) + pow((y_h - data->p_y), 2));
+	printf("vertical = %f, horisintal = %f\n",ray_len_ver, ray_len_hor);
 	if(ray_len_ver < ray_len_hor)
 		return(ray_len_ver);
 	data->dierc = 3;
 	data->r[0] = x_h;
-	data->r[1] = y_h;
 	return(ray_len_hor);
 }
 
@@ -248,7 +243,7 @@ double	distance_up_left(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC;
 	y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
-	while (x_v < W_W && x_v - 1 >= 0 && y_v < W_H && y_v >= 0 && (data->map[(int)(y_v) /64][(int)((x_v - 1) / 64)] != '1'))
+	while (x_v < W_W && x_v - 1 >= 0 && y_v < W_H && y_v >= 0 && (data->map[(int)((y_v) /REC)][(int)((x_v - 1) / REC)] != '1'))
 	{
 		x_v = floor(data->p_x / REC)* REC - REC * k;
 		y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
@@ -256,39 +251,37 @@ double	distance_up_left(t_data *data, double field)
 	}
 	ray_len_ver = sqrt(pow((x_v - data->p_x),2) + pow((y_v - data->p_y), 2));
 	data->dierc = 4;
-	data->r[0] = x_v;
-	data->r[1] = y_v;
+	data->r[0] = y_v;
 	k = 1;
 	y_h = floor(data->p_y / REC) * REC;
 	x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
-	while (x_h < W_W && x_h - 1 >= 0 && y_h - 1 >= 0  && y_h < W_H  && data->map[(int)(y_h - 1) /64][(int)(x_h / 64)] != '1')
+	while (x_h < W_W && x_h >= 0 && y_h - 1 >= 0  && y_h < W_H  && data->map[(int)((y_h - 1) /REC)][(int)(x_h / REC)] != '1')
 	{
 		y_h = floor(data->p_y / REC) * REC - REC * k;
 		x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
 		k++;
 	}
 	ray_len_hor = sqrt(pow((x_h - data->p_x),2) + pow((y_h - data->p_y), 2));
+	//printf("vertical = %f, horisintal = %f\n",ray_len_ver, ray_len_hor);
 	if(ray_len_ver < ray_len_hor)
-		return(ray_len_ver);
+		return( ray_len_ver);//,
 	data->dierc = 1;
 	data->r[0] = x_h;
-	data->r[1] = y_h;
+	//printf("horisintal\n");
 	return(ray_len_hor);
 }
 
 double	get_ray_len(t_data *data, double field)
 {
-	if (field > ((3.0 * M_PI) / 2.0) && field <= (2.0 * M_PI))
+	if (field > ((3.0 * M_PI) / 2.0) && field < (2.0 * M_PI))
 		return(distance_up_right(data, field));
-	if (field >= 0.0 && field < (M_PI / 2.0))
+	if (field > 0.0 && field < (M_PI / 2.0))
 		return(distance_down_right(data, field));
-	if (field >= (M_PI / 2.0) && field < M_PI)
+	if (field > (M_PI / 2.0) && field < M_PI)
 		return(distance_down_left(data, field));
-
-
-	if (field >= M_PI && field <= ((3.0 * M_PI) / 2.0))
+	if (field > M_PI && field < ((3.0 * M_PI) / 2.0))
 		return(distance_up_left(data, field));
-	return (16.0);
+	return (0);
 }
 
 void	put_texture_color(t_data *data, double x, double y, t_textures *t, double field)
@@ -296,13 +289,11 @@ void	put_texture_color(t_data *data, double x, double y, t_textures *t, double f
 	char	*src;
 	int		xt;
 	int		yt;
-	int	color;
+	int		color;
 
-	xt = (floor(data->r[0] % 64));
-	yt = (floor((int)y % 64));
-	//printf("x = %d      y = %d\n", xt, yt);
+	xt = floor(data->r[0] % (int)REC);
+	yt = floor(field);
 	src = t->addr + (yt * t->line_length + xt * (t->bits_per_pixel / 8));
-	//src = t->img + (int)((floor(fabs(y / REC - y))) * t->h + (int)(floor(fabs(x / REC - x))) * t->line_length);
 	color = *(unsigned int*)src;
 	my_mlx_pixel_put(data, x, y, color);
 	(void ) (field);
@@ -310,6 +301,14 @@ void	put_texture_color(t_data *data, double x, double y, t_textures *t, double f
 
 void	draw_directions(t_data *data, double x, double y, double field)
 {
+	// if (data->dierc == 1)
+	// 	my_mlx_pixel_put(data, x, y, N_C);
+	// else if (data->dierc == 2)
+	// 	my_mlx_pixel_put(data, x, y, W_C);
+	// else if (data->dierc == 3)
+	// 	my_mlx_pixel_put(data, x, y, S_C);
+	// else if (data->dierc == 4)
+	// 	my_mlx_pixel_put(data, x, y, E_C);
 	if (data->dierc == 1)
 		put_texture_color(data, x, y, &data->t[0], field);
 	else if (data->dierc == 2)
@@ -318,27 +317,43 @@ void	draw_directions(t_data *data, double x, double y, double field)
 		put_texture_color(data, x, y, &data->t[2], field);
 	else if (data->dierc == 4)
 		put_texture_color(data, x, y, &data->t[3], field);
-	//(void)ray_len;
+	(void)field;
 }
 
 void	draw_colum(t_data *data, double ray_len, double x, double field)
 {
+	double	w_start;
+	double	w_end;
 	double	wall_len;
-	double	left;
 	double		y;
+	double		j;
 
+	wall_len = (W_H * ( REC)) / (ray_len);
+	w_start = W_H / 2.0 - wall_len / 2.0;
+	w_end = W_H / 2.0 + wall_len / 2.0;
 	y = 0;
-	wall_len = ((((W_H * ( 64.0) / 2.0)) / (ray_len)) );
-	left = ((W_H - wall_len) / 2.0);
-	printf("new colum\n");
-	while ( y < (double)W_H)
+	while (y < w_start)
 	{
-		if (y <= left + wall_len && y >= left)
-			draw_directions(data, x, y, ray_len);
-		else if (y < (W_H / 2.0))
-			my_mlx_pixel_put(data, x, y, WHITE);
-		else if (y >= (W_H / 2.0 ))
-			my_mlx_pixel_put(data, x, y, (216 << 16) + (191 << 8) + 216);
+		my_mlx_pixel_put(data, x, y, WHITE);
+		y++;
+	}
+	j = 0;
+	// while ( w_start < 0)
+	// {
+	// 	j = j +  REC / wall_len;
+	// 	w_start++;
+	// }
+	if(w_start < 0)
+		j = (REC / wall_len) * fabs(w_start);
+	while (y <  w_end && y < (double)W_H)
+	{
+		draw_directions(data, x, y, j);
+		y++;
+		j = j +  REC / wall_len;
+	}
+	while (y < (double)W_H)
+	{
+		my_mlx_pixel_put(data, x, y, (216 << 16) + (191 << 8) + 216);
 		y++;
 	}
 	data->dierc = 0;
@@ -355,7 +370,7 @@ void	draw_view(t_data *data)
 	ray_angl = data->angl - (H_F_V);
 	deg_by_pex = (F_V) / (W_W);
 	x = 0;
-	
+	//printf("=====================\n");
 	while (x < W_W)
 	{
 		if (ray_angl > (M_PI * 2.0))
@@ -363,8 +378,11 @@ void	draw_view(t_data *data)
 		if (ray_angl < 0.0)
 			ray_angl = ray_angl + (M_PI * 2.0);
 		ray_len = get_ray_len(data, ray_angl);
-		printf("x = %d      y = %d\n", data->r[0], data->r[1]);
-		draw_colum(data,cos(data->angl - ray_angl) * ray_len, x, ray_angl);
+		//printf("x = %d      y = %d\n", data->r[0], data->r[1]);
+		printf("x = %f, ", x);
+		draw_colum(data,fabs(cos(data->angl - ray_angl) * ray_len), x, ray_angl);
+		// draw_colum(data,fabs(ray_len), x, ray_angl);
+		//draw_ray(data, ray_angl, RED, ray_len);
 		ray_angl += deg_by_pex;
 		x++;
 	}
@@ -382,8 +400,8 @@ void	ft_get_position(double *p_x, double *p_y, char **map)
 		{
 			if (map[y][x] == 'N' || map[y][x] == 'S' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				(*p_y) = (double)(((y) * 64) + 64 / 2 - 1);
-				(*p_x) = (double)(((x) * 64) + 64 / 2 - 1);
+				(*p_y) = (double)(((y) * REC) + REC / 2);
+				(*p_x) = (double)(((x) * REC) + REC / 2);
 				return ;
 			}
 			x++;
@@ -412,7 +430,6 @@ void draw_rectangle(t_data *data, double x, double y, int color)
 		i++;
 	}
 }
-
 
 void draw_rectangle_mini(t_data *data, double x, double y, int color)
 {
@@ -450,7 +467,7 @@ void draw_rectangle_mini(t_data *data, double x, double y, int color)
 void	draw_miniplayer(t_data *data)
 {
 	double	field;
-	double	ray_len;
+	//double	ray_len;
 	double	deg_by_pex;
 	double	x;
 	double	i;
@@ -465,9 +482,9 @@ void	draw_miniplayer(t_data *data)
 			field = field - (M_PI * 2.0);
 		if (field < 0.0)
 			field = field + (M_PI * 2.0);
-		ray_len = get_ray_len(data, field);
+		//ray_len = get_ray_len(data, field);
 		i = -1;
-		while (++i < ray_len && i < 5.0)
+		while (++i < 20.0)
 			my_mlx_pixel_put(data, (data->p_x / REC * MINI) + i * cos(field), (data->p_y / REC * MINI) + i * sin(field), RED);
 		field += deg_by_pex;
 		x++;
@@ -499,25 +516,25 @@ void	draw_minimap(t_data *data)
 void	ft_display(t_data *data)
 {
 	draw_view(data);
-	draw_minimap(data);
-	// int x;
-	// int y;
+	draw_minimap(data);return;
+	int x;
+	int y;
 
-	// y = 0;
-	// while (data->map[(y)])
-	// {
-	// 	x = 0;
-	// 	while (data->map[y][x])
-	// 	{
-	// 		if (data->map[y][x] == '1')
-	// 			draw_rectangle(data,x, y,  12632256);
-	// 		else
-	// 			draw_rectangle(data,x, y,  0);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
-	//draw_view(data);
+	y = 0;
+	while (data->map[(y)])
+	{
+		x = 0;
+		while (data->map[y][x])
+		{
+			if (data->map[y][x] == '1')
+				draw_rectangle(data,x, y,  12632256);
+			else
+				draw_rectangle(data,x, y,  0);
+			x++;
+		}
+		y++;
+	}
+	draw_view(data);
 }
 
 int	ft_strraw(char **map)
@@ -534,8 +551,8 @@ int	is_wall_front(t_data *data)
 {
 	double i;
 	double	j;
-	i = data->p_y + 17.0 * sin(data->angl);
-	j = data->p_x + 17.0 * cos(data->angl);
+	i = data->p_y + 38.0 * sin(data->angl);
+	j = data->p_x + 38.0 * cos(data->angl);
 	if (data->map[(int)(i / REC)][(int)(j / REC)] == '1')
 		return (1);
 	if (data->map[(int)(i / REC)][(int)(j / REC)] == '0' && data->p_y > i && data->p_x < j && data->map[(int)(i / REC)][(int)(j - 1)] == '1' && data->map[(int)((i + 1) / REC)][(int)(j / REC)] == '1')
@@ -554,8 +571,8 @@ int	is_wall_back(t_data *data)
 	double i;
 	double	j;
 
-	i = data->p_y - (6.0 * sin(data->angl));
-	j = data->p_x - (6.0 * cos(data->angl));
+	i = data->p_y - (32.0 * sin(data->angl));
+	j = data->p_x - (32.0 * cos(data->angl));
 	if (data->map[(int)(i / REC)][(int)(j / REC)] == '1')
 		return (1);
 	if (data->map[(int)(i / REC)][(int)(j / REC)] == '0' && data->p_y > i && data->p_x < j && data->map[(int)(i / REC)][(int)(j - 1)] == '1' && data->map[(int)((i + 1) / REC)][(int)(j / REC)] == '1')
@@ -573,13 +590,13 @@ void	update_angle(t_data *data, int dir)
 {
 	if (dir == RIGHT)
 	{
-		data->angl += (M_PI / 180.0);
+		data->angl += (M_PI / 180.0 * 3.0);
 		if (data->angl > (M_PI * 2.0))
 			data->angl = data->angl - (M_PI * 2.0);
 	}
 	if (dir == LEFT)
 	{
-		data->angl -= (M_PI / 180.0);
+		data->angl -= (M_PI / 180.0 * 3.0);
 		if (data->angl <= 0.0)
 			data->angl = data->angl + (M_PI * 2.0);
 	}
@@ -592,8 +609,8 @@ int	is_wall_right(t_data *data)
 	int	j;
 
 	new_angle = data->angl + (M_PI / (double)180) * (double)30;
-	i = ((data->p_y + (double)17 * sin(new_angle))/ (double)64);
-	j = ((data->p_x + (double)17 * cos(new_angle)) / (double)64);
+	i = ((data->p_y + (double)17 * sin(new_angle))/ (double)REC);
+	j = ((data->p_x + (double)17 * cos(new_angle)) / (double)REC);
 	if (data->map[i][j] == '1')
 		return (1);
 	return (0);
@@ -606,8 +623,8 @@ int	is_wall_left(t_data *data)
 	int	j;
 
 	new_angle = data->angl - ((M_PI * (double)30) / (double)180) ;
-	i = ((data->p_y + (double)17 * sin(new_angle))/ (double)64);
-	j = ((data->p_x + (double)17 * cos(new_angle)) / (double)64);
+	i = ((data->p_y + (double)17 * sin(new_angle))/ (double)REC);
+	j = ((data->p_x + (double)17 * cos(new_angle)) / (double)REC);
 	if (data->map[i][j] == '1')
 		return (1);
 	return (0);
@@ -774,7 +791,7 @@ int	main(int ac, char **av)
 // {
 // 	int i;
 // 	int	j;
-// 	i = data->p_y / 64 + 1;
+// 	i = data->p_y / REC + 1;
 // 	j = data->p_x / 64;
 // 	if (data->map[i][j] == '1' && (data->p_y + 6) > (i * 64))
 // 		return (1);
@@ -786,8 +803,8 @@ int	main(int ac, char **av)
 // 	int i;
 // 	int	j;
 // 	i = (data->p_y / 64);
-// 	j = data->p_x / 64;
-// 	if (data->map[i -1][j] == '1' && (data->p_y - 17) <= (i * 64))
+// 	j = data->p_x / REC;
+// 	if (data->map[i -1][j] == '1' && (data->p_y - 17) <= (i * REC))
 // 		return (1);
 // 	return (0);
 // }
