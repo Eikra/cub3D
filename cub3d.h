@@ -6,7 +6,7 @@
 /*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/08/31 14:10:51 by iecharak         ###   ########.fr       */
+/*   Updated: 2023/09/01 12:31:46 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,19 @@
 
 # define SET "\n \t\r\v\f"
 //ray_len_ver = REC - (int)data->p_x % (int)REC - 1;
+typedef struct s_textures
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	int		w;
+	int		h;
+	int		direc;
+}			t_textures;
+
+
 typedef struct cub3d
 {
 	char			**buffer;
@@ -111,6 +124,8 @@ typedef struct cub3d
 	int				rotate[2];
 	int				arawdir[2];
 	int				dir_keys[3];
+	struct s_textures	t[4];
+	int				r[2];
 	
 }					t_data;
 

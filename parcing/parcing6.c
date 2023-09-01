@@ -141,6 +141,7 @@ int	map_errors(t_data *data)
 		return (1);
 	if (border_err(data->map))
 		return (1);
+	//get_textures(data);
 	set_pos(data);
 	return (0);
 }
