@@ -6,7 +6,7 @@
 /*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/02 13:00:44 by m                ###   ########.fr       */
+/*   Updated: 2023/09/02 17:35:05 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	ft_display(t_data *data)
 {
-	draw_rays(data);
-	// draw_view(data);
-	// draw_minimap(data);return;
+	draw_rays(data);return;
+	draw_view(data);
+	draw_minimap(data);
 }
 
 int	ft_strraw(char **map)

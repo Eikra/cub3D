@@ -43,7 +43,7 @@ void	draw_colum(t_data *data, double ray_len, double x, double field)
 	double		y;
 	double		j;
 
-	wall_len = (W_H * ( REC)) / (ray_len);
+	wall_len = (W_H * ( 64)) / (ray_len);
 	w_start = W_H / 2.0 - wall_len / 2.0;
 	w_end = W_H / 2.0 + wall_len / 2.0;
 	y = 0;

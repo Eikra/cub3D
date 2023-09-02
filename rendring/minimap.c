@@ -72,6 +72,7 @@ void	draw_minimap(t_data *data)
 			if (data->map[y][x] == '1')
 				draw_rectangle_mini(data,x, y,  12632256);
 			else
+				if (data->map[y][x] == '0' || data->map[y][x] == 'N' || data->map[y][x] == 'S' || data->map[y][x] == 'W' || data->map[y][x] == 'E')
 				draw_rectangle_mini(data,x, y,  0);
 			x++;
 		}
