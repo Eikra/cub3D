@@ -6,7 +6,7 @@
 /*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/01 22:12:02 by m                ###   ########.fr       */
+/*   Updated: 2023/09/02 13:26:00 by m                ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@
 
 # define BUFFER_SIZE 10
 
+
 // #define UP_LEFT	1
 // #define DOWN_LEFT 2
 // #define DOWN_RIGHT 3
 // #define UP_RIGHT 4
 
+
 #define	VER_LEFT 1
 #define VER_HOR 2
 #define HOR_UP	3
 
-
+//*************MACOS**********
 # define ESC 53
 # define A 0
 # define W 13
@@ -44,7 +46,7 @@
 #define MOVE 3
 #define WHITE 16777215
 #define YALLOW 16776960
-#define	RED 255 << 8
+#define	GREEN (255 << 8)
 
 
 
@@ -65,7 +67,7 @@
 #define S_C 16770029
 #define W_C 16739040
 
-#define	REC	64.0
+#define	REC	48.0
 #define MINI 10.0
 
 # define SET "\n \t\r\v\f"
@@ -197,5 +199,35 @@ int	Keypress(int key, t_data *data);
 int deal_keys(t_data *data);
 int	player_movement(t_data *data);
 int	ft_exit(void);
+void	put_texture_color(t_data *data, double x, double y, t_textures *t, double texture_y);
+void	draw_directions(t_data *data, double x, double y, double texture_y);
+void	draw_colum(t_data *data, double ray_len, double x, double field);
+void	draw_view(t_data *data);
+double	distance_up_right(t_data *data, double field);
+double	distance_down_right(t_data *data, double field);
+double	distance_down_left(t_data *data, double field);
+double	distance_up_left(t_data *data, double field);
+double	get_ray_len(t_data *data, double field);
+int	is_wall_front(t_data *data);
+int	is_wall_back(t_data *data);
+void	update_angle(t_data *data, int dir);
+int	is_wall_right(t_data *data);
+int	is_wall_left(t_data *data);
+void draw_rectangle_mini(t_data *data, double x, double y, int color);
+void	draw_miniplayer(t_data *data);
+void	draw_minimap(t_data *data);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	draw_ray(t_data *data, double angl, int color, double ray_len);
+void draw_rectangle(t_data *data, double x, double y, int color);
+void	draw_raycasting(t_data *data);
+void	draw_rays(t_data *data);
+void	free_data(t_data *data);
+void	init_data(t_data *data);
+void	print_data(t_data data);
+int	ft_exit(void);
+void	init_angle(t_data *data);
+void	ft_get_position(double *p_x, double *p_y, char **map);
+int	open_textures(void	*id,char *path, t_textures *t , int dirc);
+void set_textures(t_data *data);
 
 #endif
