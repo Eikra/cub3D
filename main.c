@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
+/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:07:07 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/02 17:35:05 by m                ###   ########.fr       */
+/*   Updated: 2023/09/03 13:28:18 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_display(t_data *data)
 {
-	draw_rays(data);return;
+	//draw_rays(data);return;
 	draw_view(data);
 	draw_minimap(data);
 }
@@ -41,44 +41,26 @@ int	deal_key(int key, t_data *data)
 	{
 		data->p_x += (6.0 * cos(data->angl));
 		data->p_y += (6.0 * sin(data->angl));
-		mlx_destroy_image(data->id, data->img);
-		data->img = mlx_new_image(data->id, W_W, W_H);
-		data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
-								&data->endian);
-		ft_display(data);
-		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
 	if ((key == BACK || key == S) && !is_wall_back(data))
 	{
 		data->p_x -= (6.0 * cos(data->angl));
 		data->p_y -= (6.0 * sin(data->angl));
-		mlx_destroy_image(data->id, data->img);
-		data->img = mlx_new_image(data->id, W_W, W_H);
-		data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
-								&data->endian);
-		ft_display(data);
-		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
 	if (key == RIGHT) // && !is_wall_right(data)
 	{
 		update_angle(data, RIGHT);
-		mlx_destroy_image(data->id, data->img);
-		data->img = mlx_new_image(data->id, W_W, W_H);
-		data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
-								&data->endian);
-		ft_display(data);
-		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
 	if (key == LEFT )//&& && !is_wall_left(data)
 	{
 		update_angle(data, LEFT);
-		mlx_destroy_image(data->id, data->img);
-		data->img = mlx_new_image(data->id, W_W, W_H);
-		data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
-								&data->endian);
-		ft_display(data);
-		mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	}
+	mlx_destroy_image(data->id, data->img);
+	data->img = mlx_new_image(data->id, W_W, W_H);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length,
+								&data->endian);
+	ft_display(data);
+	mlx_put_image_to_window(data->id, data->w_id, data->img, 0, 0);
 	return (0);
 }
 

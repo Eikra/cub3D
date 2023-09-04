@@ -8,6 +8,7 @@ void	put_texture_color(t_data *data, double x, double y, t_textures *t, double t
 	int		color;
 
 	xt = floor(data->r[0] % (int)REC);
+	xt = floor(((double)xt / REC) * (double)t->w);
 	yt = floor(texture_y);
 	src = t->addr + (yt * t->line_length + xt * (t->bits_per_pixel / 8));
 	color = *(unsigned int*)src;
@@ -16,14 +17,6 @@ void	put_texture_color(t_data *data, double x, double y, t_textures *t, double t
 
 void	draw_directions(t_data *data, double x, double y, double texture_y)
 {
-	// if (data->dierc == 1)
-	// 	my_mlx_pixel_put(data, x, y, N_C);
-	// else if (data->dierc == 2)
-	// 	my_mlx_pixel_put(data, x, y, W_C);
-	// else if (data->dierc == 3)
-	// 	my_mlx_pixel_put(data, x, y, S_C);
-	// else if (data->dierc == 4)
-	// 	my_mlx_pixel_put(data, x, y, E_C);
 	if (data->dierc == 1)
 		put_texture_color(data, x, y, &data->t[0], texture_y);
 	else if (data->dierc == 2)
@@ -53,13 +46,45 @@ void	draw_colum(t_data *data, double ray_len, double x, double field)
 		y++;
 	}
 	j = 0;
-	if(w_start < 0)
-		j = (REC / wall_len) * fabs(w_start);
+
+	if(w_start < 0 && data->dierc == 1)
+		j = (data->t[0].h / wall_len) * fabs(w_start);
+	if(w_start < 0 && data->dierc == 2)
+		j = (data->t[1].h / wall_len) * fabs(w_start);
+	if(w_start < 0 && data->dierc == 3)
+		j = (data->t[2].h / wall_len) * fabs(w_start);
+	if(w_start < 0 && data->dierc == 4)
+		j = (data->t[3].h / wall_len) * fabs(w_start);	
+
+
+
 	while (y <  w_end && y < (double)W_H)
 	{
-		draw_directions(data, x, y, j);
+		if (data->dierc == 1)
+		{
+			put_texture_color(data, x, y, &data->t[0], j);
+			j = j + (data->t[0].h / wall_len);
+		}
+
+		else if (data->dierc == 2)
+		{
+			put_texture_color(data, x, y, &data->t[1], j);
+			j = j + (data->t[1].h / wall_len);
+		}
+
+		else if (data->dierc == 3)
+		{
+			put_texture_color(data, x, y, &data->t[2], j);
+			j = j + (data->t[2].h / wall_len);
+		}
+			
+		else if (data->dierc == 4)
+		{
+			put_texture_color(data, x, y, &data->t[3], j);
+			j = j + (data->t[3].h / wall_len);
+		}
+			
 		y++;
-		j = j +  REC / wall_len;
 	}
 	while (y < (double)W_H)
 	{

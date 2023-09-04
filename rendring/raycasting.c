@@ -1,4 +1,14 @@
 #include "../cub3d.h"
+
+int	is_wall_intersection(int x, int y, char **map)
+{
+	if(y >= 0 && y < (ft_strraw(map) * REC) && x >= 0 && x < (ft_strlen (map[(int)(y / REC)]) * REC)
+		&& (map[(int)(y / REC)][(int)(x / REC)] == '0' || map[(int)(y / REC)][(int)(x / REC)] == 'N'
+		|| map[(int)(y / REC)][(int)(x / REC)] == 'S' || map[(int)(y / REC)][(int)(x / REC)] == 'W'
+		|| map[(int)(y / REC)][(int)(x / REC)] == 'E'))
+		return (0);
+	return (1);
+}
 double	distance_up_right(t_data *data, double field)
 {
 	double	ray_len_ver;
@@ -11,7 +21,7 @@ double	distance_up_right(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC + REC * k;
 	y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
-	while (y_v >= 0 && y_v < (ft_strraw(data->map) * REC) && x_v + 1 >= 0 && x_v + 1 < ft_strlen (data->map[(int)((y_v) / REC)]) * REC && data->map[(int)(y_v / REC)][(int)((x_v + 1) / REC)] == '0')
+	while (!is_wall_intersection(x_v + 1, y_v, data->map))
 	{
 		x_v = floor(data->p_x / REC)* REC + REC * k;
 		y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
@@ -23,7 +33,7 @@ double	distance_up_right(t_data *data, double field)
 	k = 0;
 	y_h = floor(data->p_y / REC) * REC - REC * k;
 	x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
-	while (y_h - 1 >= 0 && y_h - 1 < (ft_strraw(data->map) * REC) && x_h >= 0 && x_h < ft_strlen (data->map[(int)((y_h - 1) / REC)]) * REC &&  data->map[(int)((y_h - 1) /REC) ][(int)(x_h / REC)] == '0')
+	while (!is_wall_intersection(x_h , y_h - 1, data->map))
 	{
 		y_h = floor(data->p_y / REC) * REC - REC * k;
 		x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
@@ -52,7 +62,7 @@ double	distance_down_right(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC + REC * k;
 	y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
-	while (y_v >= 0 && y_v < (ft_strraw(data->map) * REC) && x_v + 1 >= 0 && x_v + 1 < ft_strlen (data->map[(int)((y_v) / REC)]) * REC && (data->map[(int)(y_v /REC)][(int)((x_v + 1) / REC)] == '0') )//&& data->map[(int)(y_v + 1) /REC][(int)((x_v - 1) / REC)] != '1'
+	while (!is_wall_intersection(x_v + 1, y_v, data->map))//&& data->map[(int)(y_v + 1) /REC][(int)((x_v - 1) / REC)] != '1'
 	{
 		x_v = floor(data->p_x / REC)* REC + REC * k;
 		y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
@@ -65,7 +75,7 @@ double	distance_down_right(t_data *data, double field)
 	k = 1;
 	y_h = floor(data->p_y / REC) * REC + REC * k;
 	x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
-	while (y_h + 1 >= 0 && y_h + 1 < (ft_strraw(data->map) * REC) && x_h >= 0 && x_h < ft_strlen (data->map[(int)((y_h + 1) / REC)]) * REC && data->map[(int)(((y_h + 1) /REC))][(int)((x_h) / REC)] == '0')
+	while (!is_wall_intersection(x_h, y_h + 1, data->map))
 	{
 		y_h = floor(data->p_y / REC) * REC + REC * k;
 		x_h = fabs(y_h - data->p_y) / fabs(tan(field)) + data->p_x;
@@ -95,7 +105,7 @@ double	distance_down_left(t_data *data, double field)
 	
 	x_v = floor(data->p_x / REC)* REC - REC * k;
 	y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
-	while (y_v < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v - 1 < ft_strlen (data->map[(int)(y_v / REC)]) * REC && (data->map[(int)(y_v /REC)][(int)((x_v - 1) / REC)] == '0'))
+	while (!is_wall_intersection(x_v - 1, y_v, data->map))
 	{
 		x_v = floor(data->p_x / REC)* REC - REC * k;
 		y_v = data->p_y + fabs(tan(field) * (x_v - data->p_x));
@@ -108,7 +118,7 @@ double	distance_down_left(t_data *data, double field)
 	k = 1;
 	y_h = floor(data->p_y / REC) * REC + REC * k;
 	x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
-	while (y_h + 1 < (ft_strraw(data->map) * REC) && y_h >= 0 && x_h >= 0 && x_h < ft_strlen (data->map[(int)((y_h + 1) / REC)]) * REC  && data->map[(int)((y_h + 1) /REC)][(int)((x_h) / REC)] == '0')
+	while (!is_wall_intersection(x_h, y_h + 1, data->map))
 	{
 		y_h = floor(data->p_y / REC) * REC + REC * k;
 		x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
@@ -139,7 +149,7 @@ double	distance_up_left(t_data *data, double field)
 	k = 1;
 	x_v = floor(data->p_x / REC)* REC;
 	y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
-	while (y_v < (ft_strraw(data->map) * REC) && y_v >= 0 && x_v - 1 < ft_strlen (data->map[(int)(y_v / REC)]) * REC && (data->map[(int)((y_v) /REC)][(int)((x_v - 1) / REC)] == '0'))
+	while (!is_wall_intersection(x_v - 1, y_v, data->map))
 	{
 		x_v = floor(data->p_x / REC)* REC - REC * k;
 		y_v = data->p_y - fabs(tan(field) * (x_v - data->p_x));
@@ -152,7 +162,7 @@ double	distance_up_left(t_data *data, double field)
 	k = 1;
 	y_h = floor(data->p_y / REC) * REC;
 	x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));
-	while (y_h - 1 >= 0 && y_h - 1 < (ft_strraw(data->map) * REC) && x_h >= 0 && x_h < ft_strlen (data->map[(int)((y_h - 1) / REC)]) * REC && data->map[(int)((y_h - 1) /REC)][(int)(x_h / REC)] == '0')
+	while (!is_wall_intersection(x_h, y_h - 1, data->map))
 	{
 		y_h = floor(data->p_y / REC) * REC - REC * k;
 		x_h = data->p_x - fabs(y_h - data->p_y) / fabs(tan(field));

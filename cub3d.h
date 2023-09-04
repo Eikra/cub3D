@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m <m@student.42.fr>                        +#+  +:+       +#+        */
+/*   By: iecharak <iecharak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 22:16:11 by iecharak          #+#    #+#             */
-/*   Updated: 2023/09/02 16:19:59 by m                ###   ########.fr       */
+/*   Updated: 2023/09/03 09:57:16 by iecharak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CUB3D_H
 
 # include "libft/libft.h"
-# include "mlx.h"
+# include <mlx.h>
 #include <math.h>
 
 # define BUFFER_SIZE 10
@@ -31,15 +31,26 @@
 #define HOR_UP	3
 
 //*************MACOS**********
-# define ESC 53
-# define A 0
-# define W 13
-# define S 1
-# define D 2
- # define BACK 125
-# define ON 126
-# define LEFT 123
-# define RIGHT 124
+// # define ESC 53
+// # define A 0
+// # define W 13
+// # define S 1
+// # define D 2
+//  # define BACK 125
+// # define ON 126
+// # define LEFT 123
+// # define RIGHT 124
+
+//*************linux**********
+# define ESC 65307
+# define A 97
+# define W 119
+# define S 115
+# define D 100
+ # define BACK 65364
+# define ON 65362
+# define LEFT 65361
+# define RIGHT 65363
 
 
 
